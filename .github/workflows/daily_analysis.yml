@@ -2,8 +2,8 @@ name: 每日股票分析
 
 on:
   # 定时触发 - 每天北京时间 18:00 (UTC 10:00)
-  schedule:
-    - cron: '0 10 * * 1-5'     # 周一到周五，UTC 10:00 = 北京时间 18:00
+  # schedule:
+   # - cron: '0 10 * * 1-5'     # 周一到周五，UTC 10:00 = 北京时间 18:00
   
   # 手动触发
   workflow_dispatch:
@@ -17,6 +17,9 @@ on:
           - full          # 完整分析（股票+大盘）
           - market-only   # 仅大盘复盘
           - stocks-only   # 仅股票分析
+      stock_list:
+          description: "请输入股票编码"
+          default: "301308"
       force_run:
         description: '强制运行（跳过交易日检查）'
         required: false
@@ -51,7 +54,11 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-      
+          
+      - name: 设置环境变量
+        run: |
+          echo "STOCK_LIST=${{ github.event.inputs.stock_list }}" >> $GITHUB_ENV
+          
       - name: 创建必要目录
         run: |
           mkdir -p data logs reports
