@@ -19,11 +19,6 @@ on:
       stock_list:
         description: "请输入股票编码"
         default: ""
-      force_run:
-        description: "强制运行（跳过交易日检查）"
-        required: false
-        default: true
-        type: boolean
 jobs:
   analyze:
     runs-on: ubuntu-latest
@@ -179,7 +174,7 @@ jobs:
           fi
 
           # 判断运行模式
-          MODE="${{ github.event.inputs.mode || 'full' }}"
+          MODE="${{ github.event.inputs.mode || 'stocks-only' }}"
 
           echo "=========================================="
           echo "🚀 A股自选股智能分析系统"
@@ -218,11 +213,7 @@ jobs:
           echo ""
 
           # 构建命令行参数
-          FORCE_RUN_ARG=""
-          if [ "${{ github.event.inputs.force_run }}" = "true" ]; then
-            FORCE_RUN_ARG="--force-run"
-            echo "⚡ 已启用强制运行模式（跳过交易日检查）"
-          fi
+          FORCE_RUN_ARG="--force-run"
 
           # 执行分析
           if [ "$MODE" = "market-only" ]; then
