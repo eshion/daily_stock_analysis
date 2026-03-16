@@ -24,22 +24,10 @@ on:
         required: false
         default: true
         type: boolean
-
-# 并发控制：同一时间只运行一个分析任务
-concurrency:
-  group: stock-analysis
-  cancel-in-progress: false
-
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    # 添加超时限制，防止任务卡死
-    timeout-minutes: 30
-
     steps:
-      - name: 随机延迟（避免固定时间访问）
-        run: sleep $((RANDOM % 60)) # 随机延迟0-60秒启动
-
       - name: 检出代码
         uses: actions/checkout@v5
 
